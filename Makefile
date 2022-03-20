@@ -2,11 +2,11 @@ include .env
 export
 
 compose-up: ### Run docker-compose
-	docker-compose up --build -d postgres rabbitmq && docker-compose logs -f
+	docker compose up --build -d postgres && docker-compose logs -f
 .PHONY: compose-up
 
 compose-down: ### Down docker-compose
-	docker-compose down --remove-orphans
+	docker compose down --remove-orphans
 .PHONY: compose-down
 
 run: ###Run
