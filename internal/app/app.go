@@ -6,9 +6,9 @@ import (
 	"os"
 	"os/signal"
 	"project/back/config"
+	handlersHTTP "project/back/internal/controllers/http"
 	"project/back/internal/repository"
 	"project/back/internal/services"
-	handlersHttp "project/back/internal/transport/http"
 	"project/back/pkg/httpserver"
 	"project/back/pkg/logger"
 	"syscall"
@@ -36,7 +36,7 @@ func Run(cfg *config.Config) {
 	services := services.NewServices(repos)
 
 	// HTTP Server
-	handlers := handlersHttp.NewHandler(services)
+	handlers := handlersHTTP.NewHandler(services)
 	httpServer := httpserver.New(handlers.InitRoutes(), httpserver.Port(cfg.HTTP.Port))
 
 	log.Info("Starting to HTTP Server")

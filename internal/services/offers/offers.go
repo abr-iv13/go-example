@@ -1,14 +1,14 @@
 package offers
 
 import (
-	"project/back/internal/contract"
+	"project/back/internal/repository"
 )
 
 type Service struct {
-	repo contract.OffersRepo
+	repo repository.Offers
 }
 
-func New(repo contract.OffersRepo) *Service {
+func New(repo repository.Offers) *Service {
 	return &Service{repo: repo}
 
 }

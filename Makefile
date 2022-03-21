@@ -11,20 +11,20 @@ compose-down: ### Down docker-compose
 
 run: ###Run
 	go mod tidy && go mod download && \
-	GIN_MODE=debug CGO_ENABLED=0 go run -tags migrate ./cmd/app
+	GIN_MODE=debug CGO_ENABLED=0 go run ./cmd/app
 .PHONY: run
 
 docker-rm-volume: ### remove docker volume
 	docker volume rm go-clean-template_pg-data
 .PHONY: docker-rm-volume
 
-linter-golangci: ### check by golangci linter
+linter-golangci:  ### check by golangci linter
 	golangci-lint run
 .PHONY: linter-golangci
 
-linter-hadolint: ### check by hadolint linter
-	git ls-files --exclude='Dockerfile*' --ignored | xargs hadolint
-.PHONY: linter-hadolint
+# linter-hadolint: ### check by hadolint linter
+# 	git ls-files --exclude='Dockerfile*' --ignored | xargs hadolint
+# .PHONY: linter-hadolint
 
 linter-dotenv: ### check by dotenv linter
 	dotenv-linter
