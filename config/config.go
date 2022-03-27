@@ -7,15 +7,16 @@ import (
 )
 
 type (
+	// Config -.
 	Config struct {
-		HTTP
-		PG
-		Log
+		HTTP `yaml:"http"`
+		Log  `yaml:"logger"`
+		PG   `yaml:"postgres"`
 	}
 
 	// HTTP -.
 	HTTP struct {
-		Port string `env-required:"true" env:"HTTP_PORT"`
+		Port string `env-required:"true" yaml:"port" env:"HTTP_PORT"`
 	}
 
 	// Log -.
@@ -25,29 +26,16 @@ type (
 
 	// PG -.
 	PG struct {
-		Host     string `env-required:"true" env:"PG_HOST"`
-		Port     string `env-required:"true" env:"PG_PORT"`
-		User     string `env-required:"true" env:"PG_USER"`
-		Password string `env-required:"true" env:"PG_PASSWORD"`
-		SSLMode  string `env-required:"true" env:"PG_SSLMODE"`
+		PoolMax int    `env-required:"true" yaml:"pool_max" env:"PG_POOL_MAX"`
+		URL     string `env-required:"true"                 env:"PG_URL"`
 	}
 )
-
-func (pg PG) String() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s  sslmode=%s",
-		pg.Host,
-		pg.Port,
-		pg.User,
-		pg.Password,
-		pg.SSLMode,
-	)
-}
 
 // NewConfig returns app config.
 func NewConfig() (*Config, error) {
 	cfg := &Config{}
 
-	err := cleanenv.ReadConfig(".env", cfg)
+	err := cleanenv.ReadConfig("./config/config.yml", cfg)
 	if err != nil {
 		return nil, fmt.Errorf("config error: %w", err)
 	}

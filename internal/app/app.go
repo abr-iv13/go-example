@@ -11,11 +11,8 @@ import (
 	"project/back/internal/services"
 	"project/back/pkg/httpserver"
 	"project/back/pkg/logger"
+	"project/back/pkg/postgres"
 	"syscall"
-
-	"github.com/jmoiron/sqlx"
-
-	_ "github.com/lib/pq"
 )
 
 // Run creates objects via constructors.
@@ -23,14 +20,15 @@ func Run(cfg *config.Config) {
 	//Logger
 	log := logger.New(cfg.Log.Level)
 
-	//Database
-	db, err := sqlx.Connect("postgres", cfg.PG.String())
+	// Repository
+	pg, err := postgres.New(cfg.PG.URL, postgres.MaxPoolSize(cfg.PG.PoolMax))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
+	defer pg.Close()
 
 	//Repositories
-	repos := repository.NewRepositories(db)
+	repos := repository.NewRepositories(pg)
 
 	//Services
 	services := services.NewServices(repos)
