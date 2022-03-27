@@ -34,7 +34,7 @@ func Run(cfg *config.Config) {
 	services := services.NewServices(repos)
 
 	// HTTP Server
-	handlers := handlersHTTP.NewHandler(services)
+	handlers := handlersHTTP.NewHandler(services, log)
 	httpServer := httpserver.New(handlers.InitRoutes(), httpserver.Port(cfg.HTTP.Port))
 
 	log.Info("Starting to HTTP Server")

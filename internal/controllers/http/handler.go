@@ -2,6 +2,7 @@ package http
 
 import (
 	"project/back/internal/services"
+	"project/back/pkg/logger"
 	"project/back/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -9,9 +10,10 @@ import (
 
 type Handler struct {
 	Services *services.Services
+	log      *logger.Logger
 }
 
-func NewHandler(services *services.Services) *Handler {
+func NewHandler(services *services.Services, log *logger.Logger) *Handler {
 	return &Handler{Services: services}
 }
 
