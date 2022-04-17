@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"project/back/config"
-	handlersHTTP "project/back/internal/controllers/http"
+	"project/back/internal/handlers"
 	"project/back/internal/repository"
 	"project/back/internal/services"
 	"project/back/pkg/httpserver"
@@ -27,15 +27,12 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
-	//Repositories
+	//Dependency Injection
 	repos := repository.NewRepositories(pg)
-
-	//Services
 	services := services.NewServices(repos)
+	handlers := handlers.NewHandler(services, log)
 
-	// HTTP Server
-	handlers := handlersHTTP.NewHandler(services, log)
-	httpServer := httpserver.New(handlers.InitRoutes(), httpserver.Port(cfg.HTTP.Port))
+	httpServer := httpserver.New(":8080", handlers.InitRoutes().Handler)
 
 	log.Info("Starting to HTTP Server")
 

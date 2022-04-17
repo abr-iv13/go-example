@@ -1,7 +1,6 @@
 package httpserver
 
 import (
-	"net"
 	"time"
 )
 
@@ -9,11 +8,11 @@ import (
 type Option func(*Server)
 
 // Port -.
-func Port(port string) Option {
-	return func(s *Server) {
-		s.server.Addr = net.JoinHostPort("", port)
-	}
-}
+// func Port(port string) Option {
+// 	return func(s *Server) {
+// 		s.server.Addr = net.JoinHostPort("", port)
+// 	}
+// }
 
 // ReadTimeout -.
 func ReadTimeout(timeout time.Duration) Option {
@@ -29,9 +28,9 @@ func WriteTimeout(timeout time.Duration) Option {
 	}
 }
 
-// ShutdownTimeout -.
-func ShutdownTimeout(timeout time.Duration) Option {
+// MaxRequestBodySize -.
+func MaxRequestBodySize(maxRequestBodySize int) Option {
 	return func(s *Server) {
-		s.shutdownTimeout = timeout
+		s.server.MaxRequestBodySize = maxRequestBodySize
 	}
 }

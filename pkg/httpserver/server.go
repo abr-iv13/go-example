@@ -1,54 +1,49 @@
-// Package httpserver implements HTTP server.
 package httpserver
 
 import (
-	"context"
-	"net/http"
 	"time"
+
+	"github.com/valyala/fasthttp"
 )
 
 const (
-	_defaultReadTimeout     = 5 * time.Second
-	_defaultWriteTimeout    = 5 * time.Second
-	_defaultAddr            = ":80"
-	_defaultShutdownTimeout = 3 * time.Second
+	_defaultReadTimeout        = 5 * time.Second
+	_defaultWriteTimeout       = 5 * time.Second
+	_defaultShutdownTimeout    = 3 * time.Second
+	_defaultMaxRequestBodySize = 1024 * 1024 * 1024
 )
 
-// Server -.
 type Server struct {
-	server          *http.Server
-	notify          chan error
-	shutdownTimeout time.Duration
+	server *fasthttp.Server
+	notify chan error
+	// shutdownTimeout time.Duration
 }
 
-// New -.
-func New(handler http.Handler, opts ...Option) *Server {
-	httpServer := &http.Server{
-		Handler:      handler,
-		ReadTimeout:  _defaultReadTimeout,
-		WriteTimeout: _defaultWriteTimeout,
-		Addr:         _defaultAddr,
+func New(port string, handler fasthttp.RequestHandler, opts ...Option) *Server {
+	httpServer := &fasthttp.Server{
+		ReadTimeout:        _defaultReadTimeout,
+		WriteTimeout:       _defaultWriteTimeout,
+		MaxRequestBodySize: _defaultMaxRequestBodySize,
+		Handler:            handler,
 	}
 
 	s := &Server{
-		server:          httpServer,
-		notify:          make(chan error, 1),
-		shutdownTimeout: _defaultShutdownTimeout,
+		server: httpServer,
+		notify: make(chan error, 1),
 	}
 
-	// Custom options
 	for _, opt := range opts {
 		opt(s)
 	}
 
-	s.start()
+	s.start(port)
 
 	return s
 }
 
-func (s *Server) start() {
+func (s *Server) start(port string) {
 	go func() {
-		s.notify <- s.server.ListenAndServe()
+		s.notify <- s.server.ListenAndServe(port)
 		close(s.notify)
 	}()
 }
@@ -60,8 +55,5 @@ func (s *Server) Notify() <-chan error {
 
 // Shutdown -.
 func (s *Server) Shutdown() error {
-	ctx, cancel := context.WithTimeout(context.Background(), s.shutdownTimeout)
-	defer cancel()
-
-	return s.server.Shutdown(ctx)
+	return s.server.Shutdown()
 }
