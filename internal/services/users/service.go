@@ -1,13 +1,13 @@
 package users
 
 import (
-	"project/back/internal/repository"
+	"project/back/internal/repository/psql"
 )
 
-type Service struct {
-	repo repository.UserRepo
+type UserService struct {
+	repo psql.UserRepoInterface
 }
 
-func New(repo repository.UserRepo) *Service {
-	return &Service{repo: repo}
+func NewUserService(repo psql.UserRepoInterface) *UserService {
+	return &UserService{repo: repo}
 }

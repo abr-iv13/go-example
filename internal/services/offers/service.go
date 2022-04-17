@@ -1,13 +1,13 @@
 package offers
 
 import (
-	"project/back/internal/repository"
+	"project/back/internal/repository/psql"
 )
 
-type Service struct {
-	repo repository.OfferRepo
+type OfferService struct {
+	repo psql.OfferRepoInterface
 }
 
-func New(repo repository.OfferRepo) *Service {
-	return &Service{repo: repo}
+func NewOfferService(repo psql.OfferRepoInterface) *OfferService {
+	return &OfferService{repo: repo}
 }

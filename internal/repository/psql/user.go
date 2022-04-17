@@ -4,26 +4,32 @@ import (
 	"project/back/pkg/postgres"
 )
 
-type User struct {
+type OfferRepoInterface interface {
+	Create()
+	Get()
+	Update()
+	Delete()
+}
+type UserRepo struct {
 	db *postgres.Postgres
 }
 
-func NewUser(pg *postgres.Postgres) *User {
-	return &User{db: pg}
+func NewUserRepo(pg *postgres.Postgres) *UserRepo {
+	return &UserRepo{db: pg}
 }
 
-func (u *User) Create() {
-
-}
-
-func (u *User) Get() {
+func (u *UserRepo) Create() {
 
 }
 
-func (u *User) Update() {
+func (u *UserRepo) Get() {
 
 }
 
-func (u *User) Delete() {
+func (u *UserRepo) Update() {
+
+}
+
+func (u *UserRepo) Delete() {
 
 }

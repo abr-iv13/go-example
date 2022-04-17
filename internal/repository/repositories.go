@@ -6,27 +6,15 @@ import (
 )
 
 //Repository
-type UserRepo interface {
-	Create()
-	Get()
-	Update()
-	Delete()
-}
-type OfferRepo interface {
-	Create()
-	Get()
-	Update()
-	Delete()
-}
 
 type Repositories struct {
-	UserRepo  UserRepo
-	OfferRepo OfferRepo
+	UserRepo  psql.UserRepoInterface
+	OfferRepo psql.OfferRepoInterface
 }
 
 func NewRepositories(pg *postgres.Postgres) *Repositories {
 	return &Repositories{
-		UserRepo:  psql.NewUser(pg),
-		OfferRepo: psql.NewOffer(pg),
+		UserRepo:  psql.NewUserRepo(pg),
+		OfferRepo: psql.NewOfferRepo(pg),
 	}
 }

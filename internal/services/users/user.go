@@ -1,5 +1,9 @@
 package users
 
-func (s *Service) Create() {
+type UserServiceInterface interface {
+	Create()
+}
+
+func (s *UserService) Create() {
 	s.repo.Create()
 }

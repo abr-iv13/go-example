@@ -7,22 +7,18 @@ import (
 )
 
 //Service
-type UserService interface {
-	Create()
-}
-
-type OfferService interface {
-	Create()
-}
 
 type Services struct {
-	User  UserService
-	Offer OfferService
+	UserService  users.UserServiceInterface
+	OfferService offers.OfferServiceInterface
 }
 
 func NewServices(repos *repository.Repositories) *Services {
+	userService := users.NewUserService(repos.UserRepo)
+	offerService := offers.NewOfferService(repos.OfferRepo)
+
 	return &Services{
-		User:  users.New(repos.UserRepo),
-		Offer: offers.New(repos.OfferRepo),
+		UserService:  userService,
+		OfferService: offerService,
 	}
 }

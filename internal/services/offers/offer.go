@@ -1,5 +1,9 @@
 package offers
 
-func (s *Service) Create() {
+type OfferServiceInterface interface {
+	Create()
+}
+
+func (s *OfferService) Create() {
 
 }
