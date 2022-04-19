@@ -6,10 +6,10 @@ import (
 	"os"
 	"os/signal"
 	"project/back/config"
-	handlersHTTP "project/back/internal/controllers/http"
+	"project/back/internal/handlers"
 	"project/back/internal/repository"
 	"project/back/internal/services"
-	"project/back/pkg/httpserver"
+	httpserver "project/back/pkg/http-server"
 	"project/back/pkg/logger"
 	"project/back/pkg/postgres"
 	"syscall"
@@ -28,13 +28,13 @@ func Run(cfg *config.Config) {
 	defer pg.Close()
 
 	//Repositories
-	repos := repository.NewRepositories(pg)
+	repos := repository.NewRepository(pg)
 
 	//Services
 	services := services.NewServices(repos)
 
 	// HTTP Server
-	handlers := handlersHTTP.NewHandler(services, log)
+	handlers := handlers.NewHandler(services, log)
 	httpServer := httpserver.New(handlers.InitRoutes(), httpserver.Port(cfg.HTTP.Port))
 
 	log.Info("Starting to HTTP Server")
